@@ -1,0 +1,109 @@
+title: ohxeighty
+subtitle: Programming and Security 
+name: "Andrew Yu"
+email: ohxeighty@protonmail.com
+description: >- # this means to ignore newlines until "baseurl:"
+    Personal website.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://ohxeighty.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
+#twitter_username:
+github_username:  ohxeighty
+repository: "ohxeighty/ohxeighty.github.io" 
+logo: "/assets/images/favicon-32x32.png"
+
+# Author card 
+author:
+    name: "Andrew Yu"
+    avatar: /assets/images/avatar.png 
+    bio: "1st Year UNSW Student"
+    location: "Sydney, Australia"
+    links: 
+        - label: "GitHub"
+          icon: "fab fa-fw fa-github"
+          url: "https://github.com/ohxeighty/" 
+
+# centralised pages dir 
+include: ["_pages"] 
+
+# Build settings
+theme: minimal-mistakes-jekyll
+plugins:
+  - jekyll-feed
+  - jekyll-include-cache
+
+# Neon Minimal Mistakes Skin 
+minimal_mistakes_skin: "neon"
+
+# Collection
+collections:
+    portfolio:
+        output: true
+        permalink: /:collection/:path/
+
+# Recommended Defaults
+defaults:
+    # _posts
+    - scope:
+        path: ""
+        type: posts
+      values: 
+        layout: single
+        author_profile: true
+        read_time: true 
+        comments: true
+        share: true
+        related: true
+    # per the docs, Remember to write unique excerpt descriptions for each post for improved SEO and archive listings.
+    
+    # _pages
+    - scope:
+        path: ""
+        type: pages 
+      values: 
+        layout: single
+        author_profile: true
+    # Assign permalink overrides in the YAML Front Matter of each page
+    
+    # _portfolio
+    - scope:
+        path: ""
+        type: portfolio
+      values:
+        layout: single
+        author_profile: false
+        share: true
+
+# Enable search 
+search: true
+
+# Disqus comments
+comments: 
+    provider: "disqus" 
+    disqus:
+        shortname: "ohxeighty"
+# Footer 
+footer:
+    links: 
+        - label: "GitHub"
+          icon: "fab fa-fw fa-github"
+          url: "https://github.com/ohxeighty/" 
+    
+# Exclude from processing.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+#
+# exclude:
+#   - .sass-cache/
+#   - .jekyll-cache/
+#   - gemfiles/
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules/
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/
