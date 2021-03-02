@@ -9,6 +9,6 @@ classes: wide
 ## whoami
 Andrew Yu 
 
-1st Year UNSW Student
-
+2nd Year UNSW Student
+OSCP (OS-101-46522)
 
