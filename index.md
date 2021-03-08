@@ -13,3 +13,6 @@ Andrew Yu
 
 OSCP (OS-101-46522)
 
+[Resume][1]
+
+[1]:{{ site.url }}/download/Resume.pdf
