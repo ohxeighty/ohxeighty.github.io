@@ -1,0 +1,49 @@
+---
+layout: single
+title:  "BSides Canberra 2021 - Maker Unfaire Unintentional Solve"
+categories: ctf,writeup
+---
+BSides Canberra was a great two (point five) days. Have to admit, we (Eric, Alex and I) gravitated towards the competition hall and spent most of the con on the CTF. Kind of regret not going over to the ICS table - the SCADA stuff was appealing but I got distracted by thoughts of *p o i n t s*. The talks (viewed from a webstream from the competition hall...) were great - especially liked the _Do Not Get Arrested Challenge 2020_. Other non con related fuckery: 
+* Canberra has share ride scooters.
+* Cloning Mifare classic's is piss easy - need to look into the specifics of the hardnested attack later
+* On a personal reflection note for the CTF - I probably should have rabbit-holed more; definitely saw a lot of easy wins that I was just a few steps away from upon reviewing the challenge repo (`https://gitlab.com/cybears/fall-of-cybeartron/`). Our team probably could have used more numbers (we are three very rusty individuals) and a bit of prep. On the last day we slipped from 12th to 20th - definitely could have placed higher if I wasn't jumping around challenges.
+
+Well - enough of that. Lets get to the writeup. 
+One of the challenges - Maker Unfaire (`https://gitlab.com/cybears/fall-of-cybeartron/-/blob/master/challenges/bsides/2020/misc/maker-unfaire/WALKTHROUGH.md`) - revolved around (ab)using a slightly stripped down make (easy wins like eval and specifying makefiles were disabled) to read a flag in a very restricted "fake" shell. 
+
+The intended route to solve was chaining various rules (which could be dumped alongside the internal make table with `-p`) and targets (+ creative use of switches to avoid triggering a flag prerequisite that would trigger an error) with variable overwrites (like specifying `.DEFAULT_GOAL` to trigger targets since the shell forbade directly referencing the `flag` target) so that make would execute recipes to move the flag to the current (temporarily allocated) directory, then change its extension to `.tex`, allowing the invocation of a default rule to turn a `.tex` file to a `.dvi` file. 
+
+This allows us to overwrite the variable holding the name of the program that provides this functionality to something like `cat`, thereby reading the flag.  
+
+On night #1, I spent an hour or two getting pretty close to the solve; I had my `flag.tex` but didn't connect the dots in my head to specify a `flag.dvi` target to execute whatever `TEX` pointed to. 
+
+Instead, great amounts of google-fu from Eric (and many failures, like trying to read the flag with `file` functions in make that weren't even present in the version of make we had... and attempting to bruteforce the flag by setting it as the makefile and defining .RECIPEPREFIX before realising .RECIPEPREFIX only counts the first char) lead him to discovering the shell assignment operator. 
+
+From `https://www.gnu.org/software/make/manual/html_node/Setting.html`:
+
+>The shell assignment operator ‘!=’ can be used to execute a shell script and set a variable to its output. This operator first evaluates the right-hand side, then passes that result to the shell for execution.
+
+Hm. This was limited RCE - for example:
+
+```bash
+cybears@cybeartron:/home/ctf/challenge$ make .VARIABLES!=ls -p
+```
+
+would dump the output of `ls` in the `cwd` (`/chal/<TEMP DIRECTORY>`) into the `.VARIABLES` variable, which we could read from printing make's internal DB (`-p`). 
+
+![LS Output](/assets/images/BSides2021/limitedrce.png)
+
+From here, the problem to contend with was the faux shell not letting me escape spaces. We needed to introduce a space somehow to achieve RCE proper/read the flag.
+
+Introducing: `SHELL` and `.SHELLFLAGS`. 
+On the reasonable assumption that these variables defined the backend binary for shell assignment (`!=`), I could trick make into running arbitrary binaries and flags with two spaces to work with by overwriting them - game over!
+
+```bash
+make SHELL:=cat .SHELLFLAGS:=../flag.txt .VARIABLES!=junk -p
+```
+![RCE](/assets/images/BSides2021/flagread1.png) 
+![RCE](/assets/images/BSides2021/flagread2.png)
+ 
+Success!
+
+From here, escalating to a full on shell would probably require a bit of work e.g. building up a python payload then executing.  
