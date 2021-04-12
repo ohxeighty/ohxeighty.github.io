@@ -1,7 +1,7 @@
 ---
 layout: single
 title:  "BSides Canberra 2021 - Maker Unfaire Unintentional Solve"
-categories: ctf,writeup
+categories: [ctf,writeup]
 ---
 BSides Canberra was a great two (point five) days. Have to admit, we (Eric, Alex and I) gravitated towards the competition hall and spent most of the con on the CTF. Kind of regret not going over to the ICS table - the SCADA stuff was appealing but I got distracted by thoughts of *p o i n t s*. The talks (viewed from a webstream from the competition hall...) were great - especially liked the _Do Not Get Arrested Challenge 2020_. Other non con related fuckery: 
 * Canberra has share ride scooters.
